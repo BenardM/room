@@ -1,69 +1,71 @@
 PImage fons1, fons2, fons3;
-Boto b1, b2, b3, b4;
-int pantalla=1;
+Bouton b1, b2, b3, b4;
+int screen=1;
 
-Temps cronometre;
+Temps chronometre;
 void setup(){
-  size(400, 300);
+  size(1024, 768);
+  
 
   fons1 = loadImage("img/bomba.jpg");
   fons2 = loadImage("img/bum.jpg");
   fons3 = loadImage("img/victory.jpg");
-
-  b1 = new Boto(175, 70, color(255,0,0), 15, 40, 1, 1, "");
-  b2 = new Boto(190, 70, color(0,0,0), 15, 40, 1, 2, "");
-  b3 = new Boto(205, 70, color(0,0,255), 15, 40, 1, 1, "");
-  b4 = new Boto(220, 70, color(0,255,0), 15, 40, 1, 3, "");
-
-  cronometre = new Temps();
+  
+  b1 = new Bouton(175, 70, color(255,0,0), 15, 40, 1, 1, "");
+  b2 = new Bouton(190, 70, color(0,0,0), 15, 40, 1, 2, "");
+  b3 = new Bouton(205, 70, color(0,0,255), 15, 40, 1, 1, "");
+  b4 = new Bouton(220, 70, color(0,255,0), 15, 40, 1, 3, "");
+   
+  chronometre = new Temps();
 }
 void draw(){
-  background(255);
+  background(255,0,0);
 
-    switch(pantalla){
-    case 1: bomba();break;
-    case 2: bum();break;
+    switch(screen){
+    case 1: bomb();break;
+    case 2: explosion();break;
     case 3: victory();break;
     }
-
-
-  if (cronometre.fiEnrera()){
-    pantalla = 2;
+  
+   
+  if (chronometre.endTimer()){
+    screen = 2;
   }
-
+     
 }
 void mousePressed(){
-  b1.apreta();
-  b2.apreta();
-  b3.apreta();
-  b4.apreta();
+  b1.appuyer();
+  b2.appuyer();
+  b3.appuyer();
+  b4.appuyer();
 }
-class Boto {
+class Bouton {
   float xPos;
   float yPos;
   color c;
   float widthB;
   float heightB;
   int pantallaActual;
-  int pantallaDesti;
-  PFont fonBoto;
+  int pantallaDesti; 
+  PFont fontBouton;
   String texte;
 
-  Boto(){
+  Bouton(){
     xPos = width/2;
     yPos = height/2;
     c = color(255,0,0);
     widthB = 50;
     heightB = 25;
+    //pantall = écran
     pantallaActual = 1;
     pantallaDesti = 2;
-    fonBoto = createFont("Georgia", 12);
-    textFont(fonBoto);
+    fontBouton = createFont("Georgia", 12);
+    textFont(fontBouton);
     texte = "Boto";
   }
-  Boto(float x, float y, color col, float w, float h, int inici, int fi, String t){
-    fonBoto = createFont("Georgia", 12);
-    textFont(fonBoto);
+  Bouton(float x, float y, color col, float w, float h, int inici, int fi, String t){
+    fontBouton = createFont("Georgia", 12);
+    textFont(fontBouton);
     xPos = x;
     yPos = y;
     c = col;
@@ -73,7 +75,7 @@ class Boto {
     pantallaDesti = fi;
     texte = t;
   }
-
+  
   void dibuixa(){
     noStroke();
     fill(c, 255);
@@ -81,79 +83,80 @@ class Boto {
     fill(255);
     text (texte, xPos + 10, yPos + 20);
   }
-
-  void apreta(){
-    if ((xPos <= mouseX && mouseX <= xPos + widthB) && (yPos <= mouseY && mouseY <= yPos + heightB) && pantalla == pantallaActual){
-      pantalla = pantallaDesti;
-      cronometre.reiniciaEnrera(16);
+  
+  void appuyer(){
+    if ((xPos <= mouseX && mouseX <= xPos + widthB) && (yPos <= mouseY && mouseY <= yPos + heightB) && screen == pantallaActual){
+      screen = pantallaDesti;
+      chronometre.ReInitTimer(16);
     }
   }
 }
 class Temps{
-  int principi;
-  int enrera;
+  int TempEcouleDemarrage;
+  int decompteur;
   PFont foncrono;
   Temps(){
-    principi = millis();
-    enrera = 600000 + principi;
+    TempEcouleDemarrage = millis();
+    decompteur = 600000 + TempEcouleDemarrage;
   }
-
-  void reiniciaEnrera(int segons){
-    enrera = millis() + segons * 6000;
+  
+  void ReInitTimer(int second){
+    decompteur = millis() + second * 6000;
   }
-  int segons(){
-    return (int)((millis() - principi)/ 2000)%60;
+  int seconds(){
+    return (int)((millis() - TempEcouleDemarrage)/ 2000)%60;
   }
-  int minuts(){
-    return (int)((millis() - principi)/ 60000);
+  int minutes(){
+    return (int)((millis() - TempEcouleDemarrage)/ 60000);
   }
-
-  int minutsEnrera(){
-      int resultat = (int)((enrera-millis())/ 60000);
+  
+  int minuteTimer(){
+      int resultat = (int)((decompteur-millis())/ 60000); 
       if (resultat < 0){
         resultat = 0;
       }
       return resultat;
   }
-
-  int segonsEnrera(){
-    int resultat = (int)((enrera-millis())/ 1000)%60;
+  
+  int secondsTimer(){
+    int resultat = (int)((decompteur-millis())/ 1000)%60;
     if (resultat < 0){
         resultat = 0;
       }
-      return resultat;
+      return resultat; 
    }
-
-  boolean fiEnrera(){
-    return minutsEnrera() == 0 && segonsEnrera() == 0;
+  
+  boolean endTimer(){
+    return minuteTimer() == 0 && secondsTimer() == 0;
   }
-  boolean limitCrono(int seg){
-      return minuts()*60 + segons() == seg;
+  boolean limitChrono(int seg){
+      return minutes()*60 + seconds() == seg;
   }
-
-  void dibuixaComptaEnrere(){
+  
+  void DisplayTimer(){
     fill(255, 0, 0);
     foncrono = createFont("Arial", 30);
     textFont(foncrono);
-    text(minutsEnrera()+":"+segonsEnrera(), 175, 180);
+    text(minuteTimer()+":"+secondsTimer(), 175, 180);
   }
-  void reinicia(){
-    principi = millis();
+  void ReInit(){
+    TempEcouleDemarrage = millis();
   }
 
 }
 
-void bomba(){
+void bomb(){
   image(fons1, 0, 0);
-  cronometre.dibuixaComptaEnrere();
+  chronometre.DisplayTimer();
   b1.dibuixa();
   b2.dibuixa();
   b3.dibuixa();
   b4.dibuixa();
 }
-void bum(){
+void explosion(){
   image(fons2, 0, 0);
 }
 void victory(){
+ 
   image(fons3, 0, 0);
 }
