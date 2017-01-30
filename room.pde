@@ -5,11 +5,11 @@ int pantalla=1;
 Temps cronometre;
 void setup(){
   size(400, 300);
-  
-  fons1 = loadImage("bomba.jpg");
-  fons2 = loadImage("bum.jpg");
-  fons3 = loadImage("victory.jpg");
-  
+
+  fons1 = loadImage("img/bomba.jpg");
+  fons2 = loadImage("img/bum.jpg");
+  fons3 = loadImage("img/victory.jpg");
+
   b1 = new Boto(175, 70, color(255,0,0), 15, 40, 1, 1, "");
   b2 = new Boto(190, 70, color(0,0,0), 15, 40, 1, 2, "");
   b3 = new Boto(205, 70, color(0,0,255), 15, 40, 1, 1, "");
@@ -25,12 +25,12 @@ void draw(){
     case 2: bum();break;
     case 3: victory();break;
     }
-  
-   
+
+
   if (cronometre.fiEnrera()){
     pantalla = 2;
   }
-     
+
 }
 void mousePressed(){
   b1.apreta();
@@ -45,7 +45,7 @@ class Boto {
   float widthB;
   float heightB;
   int pantallaActual;
-  int pantallaDesti; 
+  int pantallaDesti;
   PFont fonBoto;
   String texte;
 
@@ -73,7 +73,7 @@ class Boto {
     pantallaDesti = fi;
     texte = t;
   }
-  
+
   void dibuixa(){
     noStroke();
     fill(c, 255);
@@ -81,7 +81,7 @@ class Boto {
     fill(255);
     text (texte, xPos + 10, yPos + 20);
   }
-  
+
   void apreta(){
     if ((xPos <= mouseX && mouseX <= xPos + widthB) && (yPos <= mouseY && mouseY <= yPos + heightB) && pantalla == pantallaActual){
       pantalla = pantallaDesti;
@@ -97,7 +97,7 @@ class Temps{
     principi = millis();
     enrera = 600000 + principi;
   }
-  
+
   void reiniciaEnrera(int segons){
     enrera = millis() + segons * 6000;
   }
@@ -107,30 +107,30 @@ class Temps{
   int minuts(){
     return (int)((millis() - principi)/ 60000);
   }
-  
+
   int minutsEnrera(){
-      int resultat = (int)((enrera-millis())/ 60000); 
+      int resultat = (int)((enrera-millis())/ 60000);
       if (resultat < 0){
         resultat = 0;
       }
       return resultat;
   }
-  
+
   int segonsEnrera(){
     int resultat = (int)((enrera-millis())/ 1000)%60;
     if (resultat < 0){
         resultat = 0;
       }
-      return resultat; 
+      return resultat;
    }
-  
+
   boolean fiEnrera(){
     return minutsEnrera() == 0 && segonsEnrera() == 0;
   }
   boolean limitCrono(int seg){
       return minuts()*60 + segons() == seg;
   }
-  
+
   void dibuixaComptaEnrere(){
     fill(255, 0, 0);
     foncrono = createFont("Arial", 30);
